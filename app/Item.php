@@ -13,7 +13,7 @@ class Item extends Model
 
     protected $table = "items";
 
-    protected $fillable = ['id', 'name','total', 'category_id', 'price','image'];
+    protected $fillable = ['id', 'name','total', 'descript', 'category_id', 'price','image'];
 
     /**
      * Material has many order item

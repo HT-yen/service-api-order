@@ -3,10 +3,20 @@
 namespace App\Repositories;
 
 use App\Repositories\Eloquent\BaseRepository;
+use App\Repositories\CategoryRepository;
 use App\Repositories\ItemRepositoryInterface;
 
 class ItemRepository extends BaseRepository implements ItemRepositoryInterface
 {
+    private $categoryRepository;
+
+    public function __construct(
+       CategoryRepository $categoryRepository
+   ) {
+       parent::__construct();
+       $this->categoryRepository = $categoryRepository;
+   }
+
 	public function model()
     {
        return \App\Item::class;
@@ -32,4 +42,22 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
     						->paginate(\App\Item::ITEMS_PER_PAGE);
     }
 
+    public function getItemsFollowCategory($idCategory, $sort, $size)
+    {
+        // Check if has category
+        $this->categoryRepository->find($idCategory);
+
+        // Take items of category
+        $this->model = $this->model->where('category_id', $idCategory);
+        if (isset($sort))
+        {
+            $directionSort = 'ASC';
+            if ($sort[0] == '-') {
+                $directionSort = 'DESC';
+                $sort = substr($sort, 1);
+            }
+            $this->model = $this->model->orderBy($sort, $directionSort);
+        }
+        return $this->model->paginate(isset($size) ? $size : $this->model->ITEMS_PER_PAGE);
+    }
 }

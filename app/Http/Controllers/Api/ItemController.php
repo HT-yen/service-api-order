@@ -49,4 +49,15 @@ class ItemController extends ApiController
     {
         return response()->json($this->itemRepository->getItemsBestSale(), Response::HTTP_OK);
     }
+
+    /**
+     * Get items follow category.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getItemsFollowCategory(Request $request)
+    {
+        $itemRepository = $this->itemRepository->getItemsFollowCategory($request->idCategory, $request->sort, $request->size);
+        return response()->json($itemRepository, Response::HTTP_OK);
+    }
 }

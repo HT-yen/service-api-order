@@ -18,6 +18,7 @@ class CreateItemsTable extends Migration
             $table->integer('category_id')->unsigned();
             $table->string('name');
             $table->integer('total');
+            $table->text('descript')->nullable();
             $table->date('expired_day');
             $table->float('price');
             $table->string('image')->nullable();
