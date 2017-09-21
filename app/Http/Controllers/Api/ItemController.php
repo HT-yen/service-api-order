@@ -60,4 +60,15 @@ class ItemController extends ApiController
         $itemRepository = $this->itemRepository->getItemsFollowCategory($request->idCategory, $request->sort, $request->size);
         return response()->json($itemRepository, Response::HTTP_OK);
     }
+
+    /**
+     * Get items by id.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $itemRepository = $this->itemRepository->getItemsById($id);
+        return response()->json($itemRepository, Response::HTTP_OK);
+    }
 }

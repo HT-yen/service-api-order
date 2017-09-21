@@ -23,4 +23,5 @@ Route::post('/users/login', 'Api\UserController@login');
 Route::get('/getItemsBestSale', 'Api\ItemController@getItemsBestSale');
 Route::get('/categories', 'Api\CategoryController@index');
 Route::get('/items', 'Api\ItemController@index');
+Route::get('/items/{id}', 'Api\ItemController@show');
 Route::get('/category/{idCategory}/items', 'Api\ItemController@getItemsFollowCategory');
