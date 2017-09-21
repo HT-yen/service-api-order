@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Item;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ItemRepositoryInterface;
@@ -58,6 +59,10 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
             }
             $this->model = $this->model->orderBy($sort, $directionSort);
         }
-        return $this->model->paginate(isset($size) ? $size : $this->model->ITEMS_PER_PAGE);
+        return $this->model->paginate(isset($size) ? $size : Item::ITEMS_PER_PAGE);
+    }
+    public function getItemsById($id)
+    {
+        return $this->model->find($id);
     }
 }
