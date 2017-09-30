@@ -18,8 +18,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'full_name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'is_admin' => random_int(0,1),
+        'password' => $password ?: $password = bcrypt('secret')
     ];
 });
 
@@ -52,5 +51,23 @@ $factory->define(App\OrderItem::class, function (Faker\Generator $faker) {
         'item_id' => $faker->randomElement(App\Item::pluck('id')->toArray()),
         'quantity' => random_int(1, 10),
         'price' => $faker->numberBetween(10, 100),
+    ];
+});
+
+$factory->define(App\Payment::class, function (Faker\Generator $faker) {
+    return [
+        'order_id' => $faker->randomElement(App\Order::pluck('id')->toArray()),
+        'transaction_id' => $faker->numberBetween(1, 10),
+        'transaction_status' => $faker->numberBetween(1, 10),
+        'total_amount' => 344555.1,
+        'net_amount' => 344000.1,
+        'fee_amount'=> 555.0,
+        'merchant_id'=> $faker->numberBetween(1, 10),
+        'created_on' => $faker->date,
+        'payer_name' => $faker->name,
+        'payer_email' => $faker->safeEmail,
+        'payer_phone_no' => $faker->phoneNumber,
+        'shipping_address' => $faker->address,
+        'check_sum' => $faker->text
     ];
 });
