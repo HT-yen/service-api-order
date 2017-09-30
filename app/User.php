@@ -7,12 +7,19 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
     use Notifiable;
     use SoftDeletes;
+    use EntrustUserTrait { restore as private restoreA; }
+
+    public function restore()
+    {
+        $this->restoreA();
+    }
 
     const ADMIN = 1;
     const NORMAL_USER = 0;
@@ -96,6 +103,7 @@ class User extends Authenticatable
          */
         static::deleting(function ($user) {
             $user->orders()->delete();
+            $user->roles()->sync([]);
         });
     }
 }

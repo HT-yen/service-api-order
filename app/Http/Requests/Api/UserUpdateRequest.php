@@ -29,7 +29,6 @@ class UserUpdateRequest extends FormRequest
         return [
 
             'full_name' => 'required',
-            'birthday' => 'date',
             'password' => 'nullable|min:6|confirmed',
         ];
     }

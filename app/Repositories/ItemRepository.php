@@ -63,6 +63,6 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
     }
     public function getItemsById($id)
     {
-        return $this->model->find($id);
+        return $this->model->with('category')->find($id);
     }
 }

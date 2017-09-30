@@ -31,16 +31,6 @@ class ItemController extends ApiController
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Get best sale items.
      *
      * @return \Illuminate\Http\Response
@@ -70,5 +60,53 @@ class ItemController extends ApiController
     {
         $itemRepository = $this->itemRepository->getItemsById($id);
         return response()->json($itemRepository, Response::HTTP_OK);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request request store data
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $itemRepository = $this->itemRepository->create($request->all());
+        if (!$itemRepository) {
+            return response()->json(['success' => false, 'message' => __('Error during create item')], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response()->json(['data' => $itemRepository, 'success' => true], Response::HTTP_OK);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request request update
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        if ($this->itemRepository->update($request->all(), $request->id)) {
+            return response()->json(['success' => true], Response::HTTP_OK);
+        }
+
+        return response()->json(['success' => false, 'message' => __('Error during update current item!')], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id id delete
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        if ($this->itemRepository->find($id)->delete()) {
+            return response()->json(['success' => true], Response::HTTP_OK);
+        }
+        return response()->json(['success' => false, 'message' => __('Error during delete item')], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

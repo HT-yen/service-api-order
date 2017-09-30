@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
+use App\Libraries\Traits\CustomValidationRequest;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class FoodUpdateRequest extends FormRequest
+class UserCreateRequest extends FormRequest
 {
+    use CustomValidationRequest;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,10 +27,9 @@ class FoodUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:6|unique:items,name,'.$this->id.',id',
-            'category_id' => 'required',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'full_name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
         ];
     }
 }
