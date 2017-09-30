@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->date('birthday')->nullable();
-            $table->boolean('is_admin')->default(0)->comment = 'ADMIN = 1; USER = 0';
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
