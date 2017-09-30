@@ -32,6 +32,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/users', 'Api\UserController@index');
         // create users
         Route::post('/users', 'Api\UserController@store');
+        // update users
+        Route::put('/users/{id}', 'Api\UserController@update');
+        // delete user when id is not themselves
+        Route::delete('/users/{id}', 'Api\UserController@destroy');
 	});
 });
 

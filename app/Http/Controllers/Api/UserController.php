@@ -46,9 +46,9 @@ class UserController extends ApiController
         $userRepository = $this->userRepository->create($request->all());
         if (isset($request->is_admin)) {
             if ($request->is_admin == 0) {
-                $userRepository->roles()->sync('user');
+                $userRepository->attachRole(1);
             } else {
-                $userRepository->roles()->sync('admin');
+                $userRepository->attachRole(2);
             }
         }
         if (!$userRepository) {
@@ -69,10 +69,10 @@ class UserController extends ApiController
     {
         $userRepository = $this->userRepository->create($request->except('is_admin'));
         if (!$userRepository) {
-            $userRepository->roles()->sync('user');
             return response()->json(['success' => false, 'message' => __('Error during create user')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
+        // set role is user
+        $userRepository->attachRole(1);
         return response()->json(['data' => $userRepository, 'success' => true], Response::HTTP_OK);
     }
 
@@ -170,9 +170,9 @@ class UserController extends ApiController
 
         if (isset($request->is_admin)) {
             if ($request->is_admin == 0) {
-                $userRepository->roles()->sync('user');
+                $userRepository->find($request->id)->roles()->sync(1);
             } else {
-                $userRepository->roles()->sync('admin');
+                $userRepository->find($request->id)->roles()->sync(2);
             }
         }
 
@@ -186,14 +186,17 @@ class UserController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id id delete
+     * @param eRequest $request request delete user by admin
+     * @param int $id id user
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        if ($this->userRepository->find($id)->delete()) {
-            return response()->json(['success' => true], Response::HTTP_OK);
+        if ($request->user()->id != $id) {
+            if ($this->userRepository->delete($id)) {
+                return response()->json(['success' => true], Response::HTTP_OK);
+            }
         }
         return response()->json(['success' => false, 'message' => __('Error during delete user')], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
