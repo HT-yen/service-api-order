@@ -29,6 +29,7 @@ class CreatePaymentsTable extends Migration
             $table->string('shipping_address');
             $table->string('check_sum');
             $table->timestamps();
+            $table->foreign('order_id')->references('id')->on('orders');
             $table->softDeletes();
         });
     }
