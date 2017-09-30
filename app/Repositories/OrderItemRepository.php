@@ -29,7 +29,8 @@ class OrderItemRepository extends BaseRepository implements OrderItemRepositoryI
 
     public function createOrderItem($orderId, $item)
     {
-        $price = Item::findOrFail($item['id'])->price * $item['quantity'];
+        $infoItem = Item::findOrFail($item['id']);
+        $price = $infoItem->price * $item['quantity'];
         $this->model->create(
             [
                 'item_id' => $item['id'],
@@ -38,5 +39,7 @@ class OrderItemRepository extends BaseRepository implements OrderItemRepositoryI
                 'price' => $price
             ]
         );
+        $infoItem->total = $infoItem->total - $item['quantity'];
+        $infoItem->save();
     }
 }
