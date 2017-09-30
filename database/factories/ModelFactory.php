@@ -18,6 +18,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'full_name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
+        'phone' => $faker->phoneNumber,
         'password' => $password ?: $password = bcrypt('secret')
     ];
 });
@@ -41,7 +42,8 @@ $factory->define(App\Item::class, function (Faker\Generator $faker) {
 $factory->define(App\Order::class, function (Faker\Generator $faker) {
     return [
         'user_id' => $faker->randomElement(App\User::pluck('id')->toArray()),
-        'status' => random_int(0, 3)
+        'status' => random_int(0, 3),
+        'address' => $faker->address
     ];
 });
 

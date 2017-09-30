@@ -50,6 +50,8 @@ class UserController extends ApiController
             } else {
                 $userRepository->attachRole(2);
             }
+        } else {
+            $userRepository->attachRole(1);
         }
         if (!$userRepository) {
             return response()->json(['success' => false, 'message' => __('Error during create user')], Response::HTTP_INTERNAL_SERVER_ERROR);

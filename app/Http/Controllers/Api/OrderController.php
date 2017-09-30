@@ -45,7 +45,7 @@ class OrderController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getOrderThemselvesOrder(Request $request)
+    public function getThemselvesOrder(Request $request)
     {
         return response()->json($this->orderRepository->ordersPaginateFollowUser($request->user()->id), Response::HTTP_OK);
     }
@@ -54,11 +54,11 @@ class OrderController extends ApiController
      /**
      * Create order themselves of user.
      *
-     * @param Request $request request store data user
+     * @param Request $request request store data by user
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeOrder(Request $request)
     {
         $orderRepository = $this->orderRepository->createOrder($request);
         if (!$orderRepository) {
@@ -68,7 +68,7 @@ class OrderController extends ApiController
     }
 
      /**
-     * Update the specified resource in storage of admin.
+     * Update the specified resource in storage by user or admin.
      *
      * @param Request $request request update
      *
@@ -82,26 +82,12 @@ class OrderController extends ApiController
         }
         return response()->json(['success' => true], Response::HTTP_OK);
     }
-
-    /**
-     * Update status the specified resource in storage by admin.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function updateStatus($status, $id)
-    {
-        $orderRepository = $this->orderRepository->updateStatus($status, $id);
-        if (!$orderRepository) {
-            return response()->json(['success' => false, 'message' => __('Error during update order')], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-        return response()->json(['success' => true], Response::HTTP_OK);
-    }
     
     
     /**
      * Remove the specified resource from storage by admin.
      *
-     * @param Request $request request destroy data of user and admin
+     * @param Request $request request destroy data of user or admin
      * @param int $id id delete
      *
      * @return \Illuminate\Http\Response
@@ -117,12 +103,12 @@ class OrderController extends ApiController
     /**
      * Display the specified resource by admin.
      *
-     * @param Request $request request show data of user and admin
+     * @param Request $request request show data of user or admin
      * @param int $id of order item
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function showOrder(Request $request, $id)
     {
         $orderRepository = $this->orderRepository->showOrder($request, $id);
         if ($orderRepository) {

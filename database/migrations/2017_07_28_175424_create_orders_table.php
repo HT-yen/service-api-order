@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->text('address');
             $table->timestamps();
             $table->tinyInteger('status')->comment = 'PENDING = 0; APPROVED = 1; CANCEL = 2';
             $table->foreign('user_id')->references('id')->on('users');

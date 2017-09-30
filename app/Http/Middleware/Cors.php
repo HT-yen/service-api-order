@@ -22,6 +22,7 @@ class Cors
             if (in_array($origin, $trustedDomains)) {
                 header('Access-Control-Allow-Origin: ' . $origin);
                 header('Access-Control-Allow-Headers: Content-Type, Accept, Authorization');
+                header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
             }
         }
         return $next($request);

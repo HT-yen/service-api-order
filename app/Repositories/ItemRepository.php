@@ -36,11 +36,19 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
 	    					->get();
     }
 
-    public function allItemsPaginate()
+    public function allItemsPaginate($sort, $size)
     {
-    	return $this->model->with('category')
-    						->orderBy('created_at', 'DESC')
-    						->paginate(\App\Item::ITEMS_PER_PAGE);
+        $this->model = $this->model->with('category');
+        if (isset($sort))
+        {
+            $directionSort = 'ASC';
+            if ($sort[0] == '-') {
+                $directionSort = 'DESC';
+                $sort = substr($sort, 1);
+            }
+            $this->model = $this->model->orderBy($sort, $directionSort);
+        }
+    	return $this->model->paginate(isset($size) ? $size : Item::ITEMS_PER_PAGE);
     }
 
     public function getItemsFollowCategory($idCategory, $sort, $size)

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Repositories\Eloquent\BaseRepository;
 use App\OrderItem;
+use App\Item;
 use App\Repositories\OrderItemRepositoryInterface;
 
 class OrderItemRepository extends BaseRepository implements OrderItemRepositoryInterface
@@ -28,12 +29,13 @@ class OrderItemRepository extends BaseRepository implements OrderItemRepositoryI
 
     public function createOrderItem($orderId, $item)
     {
-        $itemtable->findOrFail($item['id']);
-        $this->orderItem->create(
+        $price = Item::findOrFail($item['id'])->price * $item['quantity'];
+        $this->model->create(
             [
-                'itemt_id' => $item['id'],
+                'item_id' => $item['id'],
                 'quantity'=> $item['quantity'],
-                'order_id' => $orderId
+                'order_id' => $orderId,
+                'price' => $price
             ]
         );
     }

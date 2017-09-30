@@ -15,6 +15,9 @@ class Order extends Model
     const STATUS_APPROVED = 2;
     const STATUS_FINISHED = 3;
 
+    protected $fillable = ['user_id', 'address', 'status'];
+
+
     /**
      * Order has many order item.
      *

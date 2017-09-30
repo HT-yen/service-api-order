@@ -23,12 +23,16 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
     public function allOrdersPaginate()
     {
-       return $this->model->paginate(Order::ITEMS_PER_PAGE);
+       return $this->model->with(['items' => function($q) {
+            $q->select('items.name')->withPivot('price AS price_real');
+       }])->paginate(Order::ITEMS_PER_PAGE);
     }
 
     public function ordersPaginateFollowUser($userId)
     {
-       return $this->model->where('user_id', $userId)->paginate(Order::ITEMS_PER_PAGE);
+       return $this->model->with(['items' => function($q) {
+            $q->select('items.name')->withPivot('price AS price_real');
+       }])->where('user_id', $userId)->paginate(Order::ITEMS_PER_PAGE);
     }
 
     public function createOrder($request)
@@ -38,7 +42,8 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             $order = $this->model->create(
                 [
                     'user_id' => $request->user()->id,
-                    'status' => Order::STATUS_PENDING
+                    'status' => Order::STATUS_PENDING,
+                    'address' => $request->address,
                 ]
             );
             foreach ($request->items as $item) {
