@@ -14,22 +14,22 @@ use Illuminate\Http\Request;
 */
 /* User and admin can do (account exist) */
 Route::middleware(['auth:api'])->group(function () {
-    Route::put('/users/me', 'Api\UserController@updateProfile');
-    Route::get('/users/me', 'Api\UserController@showProfile');
+    Route::put('/users/me', 'Api\UserController@updateProfile')->middleware('permission:update-profile');
+    Route::get('/users/me', 'Api\UserController@showProfile')->middleware('permission:show-profile');
 
-    // update themselves order by user or update order of other user by admin
-    Route::put('/orders/{id}', 'Api\OrderController@updateOrder');
-    // delete themselves order by user or delete order of other user by admin
-    Route::delete('/orders/{id}', 'Api\OrderController@destroy');
     // show themselves order by user or show order of other user by admin
-    Route::get('/orders/{id}', 'Api\OrderController@showOrder');
+    Route::get('/orders/{id}', 'Api\OrderController@showOrder')->middleware('permission:show-order');
 
     /* user can do */
     Route::middleware('role:user')->group(function () {
 		//get order of themselves
-        Route::get('/getThemselvesOrder', 'Api\OrderController@getThemselvesOrder');
+        Route::get('/getThemselvesOrder', 'Api\OrderController@getThemselvesOrder')->middleware('permission:get-themselves-order');
         //create themselves order
-        Route::post('/orders', 'Api\OrderController@storeOrder');
+        Route::post('/orders', 'Api\OrderController@storeOrder')->middleware('permission:create-order');
+        // delete themselves order by user
+        Route::delete('/orders/{id}', 'Api\OrderController@destroyOrder')->middleware('permission:delete-order');
+        // update order items of themselves order by user
+        Route::put('/orders/{id}', 'Api\OrderController@updateOrder')->middleware('permission:update-order');
 	});
 
 
@@ -37,35 +37,44 @@ Route::middleware(['auth:api'])->group(function () {
     Route::group(['prefix' => 'admin', 'middleware' => 'role:admin'], function () {
 
         // show information of user
-        Route::get('/users/{id}', 'Api\UserController@show');
+        Route::get('/users/{id}', 'Api\UserController@show')->middleware('permission:show-user');
         // get all users
-        Route::get('/users', 'Api\UserController@index');
+        Route::get('/users', 'Api\UserController@index')->middleware('permission:get-all-users');
         // create user
-        Route::post('/users', 'Api\UserController@store');
+        Route::post('/users', 'Api\UserController@store')->middleware('permission:create-user');
         // update user
-        Route::put('/users/{id}', 'Api\UserController@update');
+        Route::put('/users/{id}', 'Api\UserController@update')->middleware('permission:update-user');
         // delete user when id is not themselves
-        Route::delete('/users/{id}', 'Api\UserController@destroy');
+        Route::delete('/users/{id}', 'Api\UserController@destroy')->middleware('permission:delete-user');
 
 
         // create category
-        Route::post('/categories', 'Api\CategoryController@store');
+        Route::post('/categories', 'Api\CategoryController@store')->middleware('permission:create-category');
         // update category
-        Route::put('/categories/{id}', 'Api\CategoryController@update');
+        Route::put('/categories/{id}', 'Api\CategoryController@update')->middleware('permission:update-category');
         // delete category
-        Route::delete('/categories/{id}', 'Api\CategoryController@destroy');
+        Route::delete('/categories/{id}', 'Api\CategoryController@destroy')->middleware('permission:delete-category');
 
         // create item
-        Route::post('/items', 'Api\ItemController@store');
+        Route::post('/items', 'Api\ItemController@store')->middleware('permission:create-item');
         // update item
-        Route::put('/items/{id}', 'Api\ItemController@update');
+        Route::put('/items/{id}', 'Api\ItemController@update')->middleware('permission:update-item');
         // delete item
-        Route::delete('/items/{id}', 'Api\ItemController@destroy');
+        Route::delete('/items/{id}', 'Api\ItemController@destroy')->middleware('permission:delete-item');
 
         // get all orders
-        Route::get('/orders', 'Api\OrderController@index');
+        Route::get('/orders', 'Api\OrderController@index')->middleware('permission:get-all-orders');
         //get orders follow user
-        Route::get('/getOrderFollowUser/{userId}', 'Api\OrderController@getOrderFollowUser');
+        Route::get('/getOrderFollowUser/{userId}', 'Api\OrderController@getOrderFollowUser')->middleware('permission:get-all-orders-follow-user');
+
+
+        // update status order of other user by admin
+        Route::put('/change-status-orders/{id}', 'Api\OrderController@changeStatusOrder')->middleware('permission:change-status-order');
+
+        // get all role of user
+        Route::get('/get-all-roles', function () {
+            return json_decode(\App\Role::select(['id', 'name'])->get());
+        })->middleware('permission:get-all-roles');;
 	});
 });
 

@@ -73,4 +73,12 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
     {
         return $this->model->with('category')->find($id);
     }
+
+    public function addQuantityIntoTotalItems($orderItems) {
+        foreach ($orderItems as $key => $orderItem) {
+            $item = $this->model->findOrFail($orderItem->item_id);
+            $item->total = $item->total + $orderItem->quantity;
+            $item->save();
+        }
+    }
 }

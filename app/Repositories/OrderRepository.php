@@ -68,30 +68,68 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         }
     }
 
-    public function updateOrder($request, $id)
+    // user update order item of themselves order
+    public function updateOrderItemOfOrder($request, $id)
     {
-        // $order = $this->model->findOrFail($id);
-        // if (($order->user_id == $request->user()->id) || $request->user()->hasRole('admin')) {
-        //     DB::beginTransaction();
-        //     try {
-        //         $order = $this->order->findOrFail($id);
-        //         // order is not pending return false
-        //         if ($order->status != 1) {
-        //             return false;
-        //         }
-        //         //delete old order's orderItem
-        //         $hotel->items()->detach();
-        //         foreach ($request->items as $item) {
-        //             $this->orderItemRepository->createOrderItem($id, $item);
-        //         }
-        //         DB::commit();
-        //         return $order;
-        //     } catch (Exception $e) {
-        //         DB::rollback();
-        //         return false;
-        //     }
-        // }
-        // return false;
+        $order = $this->model->findOrFail($id);
+        if ($order->user_id == $request->user()->id) {
+            DB::beginTransaction();
+            try {
+                // order is not pending return false
+                if ($order->status != 1) {
+                    return false;
+                }
+                //add quantity orderItem which was devided before
+                $this->itemRepository->addQuantityIntoTotalItems($order->orderItems);
+                //delete old order's orderItem
+                $order->items()->detach();
+                // re-create orderItems which user wanted to order
+                foreach ($request->items as $item) {
+                    if ($this->itemRepository->find($item['id'])->total >=
+                        $item['quantity']) {
+                        $this->orderItemRepository->createOrderItem($order->id, $item);
+                    } else {
+                        DB::rollback();
+                        return false;
+                    }
+                }
+            
+                DB::commit();
+                return $order;
+            } catch (Exception $e) {
+                DB::rollback();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // admin change status order 
+    public function changeStatusOrder($request, $id)
+    {
+        $order = $this->model->findOrFail($id);
+        if ($request->user()->hasRole('admin')) {
+            DB::beginTransaction();
+            try {
+                // order is finish return false
+                if ($order->status == 3) {
+                    return false;
+                }
+                // cancel order
+                if ($request->status == 0) {
+                    //Not delete old order's orderItem but add quantity orderItem which was devided before
+                    $this->itemRepository->addQuantityIntoTotalItems($order->orderItems);
+                }
+                $order->status = $request->status;
+                $order->save();
+                DB::commit();
+                return $order;
+            } catch (Exception $e) {
+                DB::rollback();
+                return false;
+            }
+        }
+        return false;
     }
 
     public function showOrder($request, $id)
@@ -107,15 +145,28 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return false;
     }
 
+    // user delete themselves order by cancel this
     public function deleteOrder($request, $id)
     {
         $order = $this->model->findOrFail($id);
-        if (
-            ($order->user_id == $request->user()->id)
-            ||
-            ($request->user()->hasRole('admin'))
-        ) {
-            return $order->delete();
+        if ($order->user_id == $request->user()->id) {
+            DB::beginTransaction();
+            try {
+                 // order is not pending return false
+                if ($order->status != 1) {
+                    return false;
+                }
+                //add quantity orderItem which was devided before
+                $this->itemRepository->addQuantityIntoTotalItems($order->orderItems);
+                //delete old order's orderItem
+                $order->items()->detach();
+                $order->delete();
+                DB::commit();
+                return true;
+            } catch (Exception $e) {
+                DB::rollback();
+                return false;
+            }
         }
         return false;
     }

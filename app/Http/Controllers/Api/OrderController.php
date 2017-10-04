@@ -68,7 +68,7 @@ class OrderController extends ApiController
     }
 
      /**
-     * Update the specified resource in storage by user or admin.
+     * Update order items of themselves by user.
      *
      * @param Request $request request update
      *
@@ -76,23 +76,39 @@ class OrderController extends ApiController
      */
     public function updateOrder(Request $request, $id)
     {
-        $orderRepository = $this->orderRepository->updateOrder($request, $id);
+        $orderRepository = $this->orderRepository->updateOrderItemOfOrder($request, $id);
         if (!$orderRepository) {
             return response()->json(['success' => false, 'message' => __('Error during update order')], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return response()->json(['success' => true], Response::HTTP_OK);
+    }
+
+    /**
+     * Change status of order by admin.
+     *
+     * @param Request $request request update
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatusOrder(Request $request, $id)
+    {
+        $orderRepository = $this->orderRepository->changeStatusOrder($request, $id);
+        if (!$orderRepository) {
+            return response()->json(['success' => false, 'message' => __('Error during change status order')], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return response()->json(['success' => true], Response::HTTP_OK);
     }
     
     
     /**
-     * Remove the specified resource from storage by admin.
+     * Delete themselves order by user.
      *
      * @param Request $request request destroy data of user or admin
      * @param int $id id delete
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroyOrder(Request $request, $id)
     {
         if ($this->orderRepository->deleteOrder($request, $id)) {
             return response()->json(['success' => true], Response::HTTP_OK);
