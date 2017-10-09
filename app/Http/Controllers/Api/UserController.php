@@ -29,9 +29,9 @@ class UserController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(['data' => $this->userRepository->getAllUsers(),'success' => true], Response::HTTP_OK);
+        return response()->json(['data' => $this->userRepository->getAllUsers($request->key),'success' => true], Response::HTTP_OK);
     }
 
     /**

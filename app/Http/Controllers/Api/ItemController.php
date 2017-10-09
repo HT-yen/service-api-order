@@ -27,7 +27,7 @@ class ItemController extends ApiController
      */
     public function index(Request $request)
     {
-        return response()->json($this->itemRepository->allItemsPaginate($request->sort, $request->size), Response::HTTP_OK);
+        return response()->json($this->itemRepository->allItemsPaginate($request->key, $request->sort, $request->size), Response::HTTP_OK);
     }
 
     /**

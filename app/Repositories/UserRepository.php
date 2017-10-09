@@ -13,8 +13,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
        return \App\User::class;
     }
 
-    public function getAllUsers()
+    public function getAllUsers($key)
     {
+        if (isset($key)) {
+            $this->model = $this->model
+                                ->orWhere("full_name", "LIKE", "%$key%")
+                                ->orWhere("email", "LIKE", "%$key%");
+        }
     	return $this->model->with('roles')->paginate(User::ITEMS_PER_PAGE);
     }
 

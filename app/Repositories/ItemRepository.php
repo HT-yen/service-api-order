@@ -36,7 +36,7 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
 	    					->get();
     }
 
-    public function allItemsPaginate($sort, $size)
+    public function allItemsPaginate($key, $sort, $size)
     {
         $this->model = $this->model->with('category');
         if (isset($sort))
@@ -47,6 +47,9 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
                 $sort = substr($sort, 1);
             }
             $this->model = $this->model->orderBy($sort, $directionSort);
+        }
+        if (isset($key)) {
+            $this->model = $this->model->where("name", "LIKE", "%$key%");
         }
     	return $this->model->paginate(isset($size) ? $size : Item::ITEMS_PER_PAGE);
     }

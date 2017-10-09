@@ -3,6 +3,6 @@ namespace App\Repositories;
 
 interface UserRepositoryInterface
 {
-    public function getAllUsers();
+    public function getAllUsers($key);
 	public function showUser($id);
 }
