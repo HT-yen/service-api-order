@@ -83,6 +83,9 @@ Route::middleware(['auth:api'])->group(function () {
 	});
 });
 
+// check exist email
+Route::get('/check-exist-email/{email}', 'Api\UserController@checkExistEmail');
+
 // register
 Route::post('/users', 'Api\UserController@register');
 

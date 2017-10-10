@@ -5,4 +5,5 @@ interface UserRepositoryInterface
 {
     public function getAllUsers($key);
 	public function showUser($id);
+	public function checkExistEmail($email);
 }

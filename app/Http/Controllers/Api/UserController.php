@@ -202,4 +202,17 @@ class UserController extends ApiController
         }
         return response()->json(['success' => false, 'message' => __('Error during delete user')], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+
+    /**
+     * Check exist from storage.
+     *
+     * @param String $email email of user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checkExistEmail(String $email)
+    {
+        return response()->json(['success' => $this->userRepository->checkExistEmail($email)]);
+    }
 }

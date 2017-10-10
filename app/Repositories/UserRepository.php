@@ -28,4 +28,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     	return $this->model->with('roles')->find($id);
     }
 
+    public function checkExistEmail($email)
+    {
+        if (count($this->model->where('email', $email)->get()) > 0) {
+            return false;
+        }
+        return true;
+    }
 }
