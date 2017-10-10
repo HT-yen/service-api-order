@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Repositories\ItemRepositoryInterface as ItemRepository;
 use Illuminate\Http\Response;
+use App\Http\Requests\Api\UpdateImageRequest;
 
 class ItemController extends ApiController
 {
@@ -108,5 +109,38 @@ class ItemController extends ApiController
             return response()->json(['success' => true], Response::HTTP_OK);
         }
         return response()->json(['success' => false, 'message' => __('Error during delete item')], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Save image and response image name
+     *
+     * @param UpdateImageRequest $request request has image file
+     *
+     * @return string
+     */
+    public function postUploadImage(UpdateImageRequest $request)
+    {
+        if ($request->hasFile('file')) {
+            $image = $request->file('file');
+            $imageName = time() . $image->getClientOriginalName();
+            Image::make($image)->save(public_path('images/items/' . $imageName));
+            return $imageName;
+        }
+        return response()->json(['success' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+    /**
+     * Remove image with file name
+     *
+     * @param Request $request to remove image
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteImage(Request $request)
+    {
+        $fileName = $request->get('file_name');
+        if (unlink(public_path('images/items/' . $fileName))) {
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => __('Error during remove image')], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

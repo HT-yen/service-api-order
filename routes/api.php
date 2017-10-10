@@ -74,7 +74,12 @@ Route::middleware(['auth:api'])->group(function () {
         // get all role of user
         Route::get('/get-all-roles', function () {
             return json_decode(\App\Role::select(['id', 'name'])->get());
-        })->middleware('permission:get-all-roles');;
+        })->middleware('permission:get-all-roles');
+
+        // update image for item
+        Route::post('/upload-image/items', 'Api\UserController@postUploadImage');
+        // delete image of item
+        Route::delete('/remove-image/items', 'Api\UserController@deleteImage');
 	});
 });
 
