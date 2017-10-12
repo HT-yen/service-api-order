@@ -30,6 +30,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/orders/{id}', 'Api\OrderController@destroyOrder')->middleware('permission:delete-order');
         // update order items of themselves order by user
         Route::put('/orders/{id}', 'Api\OrderController@updateOrder')->middleware('permission:update-order');
+        Route::post('/payments', 'Api\PaymentController@store')->middleware('permission:create-payment');
 	});
 
 

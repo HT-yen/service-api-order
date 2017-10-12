@@ -49,6 +49,16 @@ class Order extends Model
     }
 
     /**
+     * Order belongsTo User
+     *
+     * @return mixed
+     */
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    /**
      * This is a recommended way to declare event handlers
      *
      * @return void
@@ -59,6 +69,7 @@ class Order extends Model
 
         static::deleting(function ($order) {
             $order->orderItems()->delete();
+            $order->payment()->delete();
         });
     }
 }
