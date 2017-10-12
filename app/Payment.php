@@ -10,13 +10,14 @@ class Payment extends Model
     use SoftDeletes;
 
     const ITEMS_PER_PAGE = 10;
+    protected $fillable = ['order_id', 'transaction_id', 'payment_gross', 'payment_at', 'payer_email'];
 
     /**
      * Get the order record associated with the payment.
      */
     public function order()
     {
-        return $this->hasOne(Order::class);
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     /**
@@ -27,9 +28,11 @@ class Payment extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::deleting(function ($order) {
-            $order->orderItems()->delete();
+        // Update status of order to FINISHED
+        static::creating(function ($payment) {
+            $order = $payment->order;
+            $order->status = Order::STATUS_FINISHED;
+            $order->save();
         });
     }
 }

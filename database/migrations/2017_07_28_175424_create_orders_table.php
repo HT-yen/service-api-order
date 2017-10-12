@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->text('address');
             $table->timestamps();
-            $table->tinyInteger('status')->comment = 'PENDING = 0; APPROVED = 1; CANCEL = 2';
+            $table->tinyInteger('status')->comment = 'CANCEL = 0; PENDING = 1; APPROVED = 2; FINISHED = 3';
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
         });
