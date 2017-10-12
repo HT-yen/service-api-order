@@ -77,9 +77,9 @@ Route::middleware(['auth:api'])->group(function () {
         })->middleware('permission:get-all-roles');
 
         // update image for item
-        Route::post('/upload-image/items', 'Api\UserController@postUploadImage');
+        Route::post('/upload-image/items', 'Api\ItemController@postUploadImage');
         // delete image of item
-        Route::delete('/remove-image/items', 'Api\UserController@deleteImage');
+        Route::delete('/remove-image/items', 'Api\ItemController@deleteImage');
 	});
 });
 

@@ -25,11 +25,21 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
        return \App\Order::class;
     }
 
-    public function allOrdersPaginate()
+    public function allOrdersPaginate($sort, $size)
     {
-       return $this->model->with(['items' => function($q) {
+        $this->model = $this->model->with(['items' => function($q) {
             $q->select('items.name')->withPivot('price AS price_real');
-       }])->paginate(Order::ITEMS_PER_PAGE);
+        }]);
+        if (isset($sort))
+        {
+            $directionSort = 'ASC';
+            if ($sort[0] == '-') {
+                $directionSort = 'DESC';
+                $sort = substr($sort, 1);
+            }
+            $this->model = $this->model->orderBy($sort, $directionSort);
+        }
+        return $this->model->paginate(isset($size) ? $size : Order::ITEMS_PER_PAGE);
     }
 
     public function ordersPaginateFollowUser($userId)

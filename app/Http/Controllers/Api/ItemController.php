@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\ItemRepositoryInterface as ItemRepository;
 use Illuminate\Http\Response;
 use App\Http\Requests\Api\UpdateImageRequest;
+use Image;
 
 class ItemController extends ApiController
 {
