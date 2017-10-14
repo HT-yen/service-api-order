@@ -25,9 +25,9 @@ class OrderController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->orderRepository->allOrdersPaginate(), Response::HTTP_OK);
+        return response()->json($this->orderRepository->allOrdersPaginate($request->sort, $request->size), Response::HTTP_OK);
     }
 
     /**

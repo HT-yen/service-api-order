@@ -59,7 +59,7 @@ $factory->define(App\OrderItem::class, function (Faker\Generator $faker) {
 $factory->define(App\Payment::class, function (Faker\Generator $faker) {
     return [
         'order_id' => $faker->randomElement(App\Order::pluck('id')->toArray()),
-        'transaction_id' => $faker->numberBetween(1, 10),
+        'transaction_id' =>  $faker->bothify('##???##???'),
         'payment_at' => $faker->dateTime(),
         'payment_gross' => 344555.1,
         'payer_email' => $faker->safeEmail,
