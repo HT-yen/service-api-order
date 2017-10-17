@@ -17,7 +17,7 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
      */
 	public function createPayment($request)
 	{
-		if ($request->user()->id == $request->order_id) {
+		if ($request->user()->id == \App\Order::find($request->order_id)->user_id) {
 			return $this->model->create($request->all());
 		}
 		return false;
