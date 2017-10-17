@@ -21,7 +21,7 @@ class Cors
             $origin = $request->server()['HTTP_ORIGIN'];
             if (in_array($origin, $trustedDomains)) {
                 header('Access-Control-Allow-Origin: ' . $origin);
-                header('Access-Control-Allow-Headers: Content-Type, Accept, Authorization,X-Requested-With, Cache-Control');
+                header('Access-Control-Allow-Headers: Content-Type, Accept, Authorization,X-Requested-With, Cache-Control, X-XSRF-TOKEN');
                 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
             }
         }
