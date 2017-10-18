@@ -25,9 +25,9 @@ class PaymentController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->paymentRepository->all(), Response::HTTP_OK);   
+        return response()->json($this->paymentRepository->allPaymentsPaginate($request->sort, $request->size), Response::HTTP_OK);   
     }
 
     /**
