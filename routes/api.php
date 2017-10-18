@@ -81,6 +81,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/upload-image/items', 'Api\ItemController@postUploadImage');
         // delete image of item
         Route::delete('/remove-image/items', 'Api\ItemController@deleteImage');
+
+        // get all payments
+        Route::get('/payments', 'Api\PaymentController@index')->middleware('permission:get-all-payments');
 	});
 });
 

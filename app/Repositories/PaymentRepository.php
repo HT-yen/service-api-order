@@ -23,4 +23,19 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
 		}
 		return false;
 	}
+
+	public function allPaymentsPaginate($sort, $size)
+    {
+        $this->model = $this->model->with('order');
+        if (isset($sort))
+        {
+            $directionSort = 'ASC';
+            if ($sort[0] == '-') {
+                $directionSort = 'DESC';
+                $sort = substr($sort, 1);
+            }
+            $this->model = $this->model->orderBy($sort, $directionSort);
+        }
+    	return $this->model->paginate(isset($size) ? $size : \App\Payment::ITEMS_PER_PAGE);
+    }
 }
