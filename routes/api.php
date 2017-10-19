@@ -101,6 +101,7 @@ Route::get('/getItemsBestSale', 'Api\ItemController@getItemsBestSale');
 
 // get all categories
 Route::get('/categories', 'Api\CategoryController@index');
+Route::get('/categories/xml', 'Api\XMLResponse@index');
 
 // get all items
 Route::get('/items', 'Api\ItemController@index');
