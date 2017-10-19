@@ -13,14 +13,23 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
        return \App\User::class;
     }
 
-    public function getAllUsers($key)
+    public function getAllUsers($key,$sort,$size)
     {
+        if (isset($sort))
+        {
+            $directionSort = 'ASC';
+            if ($sort[0] == '-') {
+                $directionSort = 'DESC';
+                $sort = substr($sort, 1);
+            }
+            $this->model = $this->model->orderBy($sort, $directionSort);
+        }
         if (isset($key)) {
             $this->model = $this->model
                                 ->orWhere("full_name", "LIKE", "%$key%")
                                 ->orWhere("email", "LIKE", "%$key%");
         }
-    	return $this->model->with('roles')->paginate(User::ITEMS_PER_PAGE);
+    	return $this->model->with('roles')->paginate(isset($size) ? $size : User::ITEMS_PER_PAGE);
     }
 
     public function showUser($id)

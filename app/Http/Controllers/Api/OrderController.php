@@ -35,9 +35,9 @@ class OrderController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getOrderFollowUser($userId)
+    public function getOrderFollowUser($userId,Request $request)
     {
-        return response()->json($this->orderRepository->ordersPaginateFollowUser($userId), Response::HTTP_OK);
+        return response()->json($this->orderRepository->ordersPaginateFollowUser($userId, $request->sort, $request->size), Response::HTTP_OK);
     }
 
     /**
