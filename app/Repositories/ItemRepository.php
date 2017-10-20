@@ -84,4 +84,24 @@ class ItemRepository extends BaseRepository implements ItemRepositoryInterface
             $item->save();
         }
     }
+
+    public function getBestSaleItemsRelatedToItem($id, $size)
+    {
+        $idCategory = Item::find($id)->category_id;
+        // Check if has category
+        $this->categoryRepository->find($idCategory);
+
+        $this->model = $this->model->select([
+                'items.*', 
+                \DB::raw('SUM(order_items.quantity) AS totalQuantity')
+            ])
+            ->leftJoin('order_items', 'item_id', '=', 'items.id')
+            ->where('order_items.created_at', '<=', \DB::raw('DATE_SUB(NOW(),INTERVAL -30 DAY)'))
+            ->where('category_id', '=', $idCategory)
+            ->groupBy('items.id')
+            ->having('id', '!=', $id)
+            ->orderby('totalQuantity', 'DESC');
+
+        return $this->model->paginate(isset($size) ? $size : Item::ITEMS_PER_PAGE);
+    }
 }

@@ -110,3 +110,6 @@ Route::get('/items/{id}', 'Api\ItemController@show');
 
 // get all items follow category
 Route::get('/categories/{idCategory}/items', 'Api\ItemController@getItemsFollowCategory');
+
+//get best sale items follow related this item
+Route::get('/items-related/{id}', 'Api\ItemController@getBestSaleItemsRelatedToItem');
