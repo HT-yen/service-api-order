@@ -8,6 +8,7 @@ use App\Repositories\OrderRepositoryInterface;
 use App\Repositories\OrderItemRepository;
 use App\Repositories\ItemRepository;
 use DB;
+use Carbon\Carbon;
 
 class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 {
@@ -180,4 +181,40 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         }
         return false;
     }
+
+    public function getStatisticOrder($startDate, $endDate,  $sort, $size, $status)
+    {
+        $this->model = $this->model->with(['items' => function($q) {
+            $q->select('items.name')->withPivot('price AS price_real');
+        }]);
+
+        if (isset($startDate) && isset($endDate))
+        {
+            $startDate = Carbon::createFromFormat("d/m/Y H:i:s", $startDate . " 00:00:00")
+                ->toDateTimeString();
+
+            $endDate = Carbon::createFromFormat("d/m/Y H:i:s", $endDate . " 23:59:59")
+                ->toDateTimeString();
+            $this->model = $this->model->where("created_at", ">=", $startDate)
+                                        ->where("created_at", "<=", $endDate);
+        }
+
+        if (isset($status))
+        {
+            $this->model = $this->model->where($status, $status);
+        }
+
+
+        if (isset($sort))
+        {
+            $directionSort = 'ASC';
+            if ($sort[0] == '-') {
+                $directionSort = 'DESC';
+                $sort = substr($sort, 1);
+            }
+            $this->model = $this->model->orderBy($sort, $directionSort);
+        }
+        return $this->model->paginate(isset($size) ? $size : Order::ITEMS_PER_PAGE);
+    }
+
 }
