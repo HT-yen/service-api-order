@@ -47,7 +47,7 @@ class OrderController extends ApiController
      */
     public function getThemselvesOrder(Request $request)
     {
-        return response()->json($this->orderRepository->ordersPaginateFollowUser($request->user()->id), Response::HTTP_OK);
+        return response()->json($this->orderRepository->ordersPaginateFollowUser($request->user()->id,$request->sort,$request->sizeon), Response::HTTP_OK);
     }
 
 
