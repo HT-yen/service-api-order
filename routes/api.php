@@ -67,7 +67,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/orders', 'Api\OrderController@index')->middleware('permission:get-all-orders');
         //get orders follow user
         Route::get('/getOrderFollowUser/{userId}', 'Api\OrderController@getOrderFollowUser')->middleware('permission:get-all-orders-follow-user');
-
+        // get orders to statistic
+        Route::get('/statisticOrders', 'Api\OrderController@getStatisticOrder')->middleware('permission:get-statistic-orders');
 
         // update status order of other user by admin
         Route::put('/change-status-orders/{id}', 'Api\OrderController@changeStatusOrder')->middleware('permission:change-status-order');
@@ -110,3 +111,6 @@ Route::get('/items/{id}', 'Api\ItemController@show');
 
 // get all items follow category
 Route::get('/categories/{idCategory}/items', 'Api\ItemController@getItemsFollowCategory');
+
+//get best sale items follow related this item
+Route::get('/items-related/{id}', 'Api\ItemController@getBestSaleItemsRelatedToItem');

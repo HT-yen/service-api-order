@@ -132,4 +132,14 @@ class OrderController extends ApiController
         }
         return response()->json(['success' => false, 'message' => __('Error during get order')], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * Get a listing of the orders to statistic by .
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getStatisticOrder(Request $request)
+    {
+        return response()->json($this->orderRepository->getStatisticOrder($request->startDate, $request->endDate, $request->sort, $request->size, $request->status), Response::HTTP_OK);
+    }
 }

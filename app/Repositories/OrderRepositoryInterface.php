@@ -10,4 +10,5 @@ interface OrderRepositoryInterface
 	public function changeStatusOrder($request, $id);
 	public function showOrder($request, $id);
 	public function deleteOrder($request, $id);
+    public function getStatisticOrder($startDate, $endDate, $sort, $size, $status);
 }

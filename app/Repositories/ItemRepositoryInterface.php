@@ -8,4 +8,5 @@ interface ItemRepositoryInterface
 	public function getItemsFollowCategory($idCategory, $sort, $size);
     public function getItemsById($id);
     public function addQuantityIntoTotalItems($orderItems);
+    public function getBestSaleItemsRelatedToItem($id, $size);
 }
