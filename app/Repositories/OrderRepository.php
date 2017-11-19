@@ -201,10 +201,10 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
         if (isset($startDate) && isset($endDate))
         {
-            $startDate = Carbon::createFromFormat("d/m/Y H:i:s", $startDate . " 00:00:00")
+            $startDate = Carbon::createFromFormat("Y-m-d H:i:s", $startDate . " 00:00:00")
                 ->toDateTimeString();
 
-            $endDate = Carbon::createFromFormat("d/m/Y H:i:s", $endDate . " 23:59:59")
+            $endDate = Carbon::createFromFormat("Y-m-d H:i:s", $endDate . " 23:59:59")
                 ->toDateTimeString();
             $this->model = $this->model->where("created_at", ">=", $startDate)
                                         ->where("created_at", "<=", $endDate);
@@ -212,7 +212,7 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
         if (isset($status))
         {
-            $this->model = $this->model->where($status, $status);
+            $this->model = $this->model->where('status', $status);
         }
 
 
