@@ -25,9 +25,9 @@ class OrderController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->orderRepository->allOrdersPaginate(), Response::HTTP_OK);
+        return response()->json($this->orderRepository->allOrdersPaginate($request->sort, $request->size), Response::HTTP_OK);
     }
 
     /**
@@ -35,9 +35,9 @@ class OrderController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getOrderFollowUser($userId)
+    public function getOrderFollowUser($userId,Request $request)
     {
-        return response()->json($this->orderRepository->ordersPaginateFollowUser($userId), Response::HTTP_OK);
+        return response()->json($this->orderRepository->ordersPaginateFollowUser($userId, $request->sort, $request->size), Response::HTTP_OK);
     }
 
     /**
@@ -47,7 +47,7 @@ class OrderController extends ApiController
      */
     public function getThemselvesOrder(Request $request)
     {
-        return response()->json($this->orderRepository->ordersPaginateFollowUser($request->user()->id), Response::HTTP_OK);
+        return response()->json($this->orderRepository->ordersPaginateFollowUser($request->user()->id,$request->sort,$request->sizeon), Response::HTTP_OK);
     }
 
 

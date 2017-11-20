@@ -43,11 +43,22 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return $this->model->paginate(isset($size) ? $size : Order::ITEMS_PER_PAGE);
     }
 
-    public function ordersPaginateFollowUser($userId)
+    public function ordersPaginateFollowUser($userId,$sort,$size)
     {
-       return $this->model->with(['items' => function($q) {
+       $this->model = $this->model->with(['items' => function($q) {
             $q->select('items.name')->withPivot('price AS price_real');
-       }])->where('user_id', $userId)->paginate(Order::ITEMS_PER_PAGE);
+       }]);
+        if (isset($sort))
+        {
+            $directionSort = 'ASC';
+            if ($sort[0] == '-') {
+                $directionSort = 'DESC';
+                $sort = substr($sort, 1);
+            }
+            $this->model = $this->model->orderBy($sort, $directionSort);
+        }
+       return $this->model->where('user_id', $userId)->paginate(isset($size) ? $size : Order::ITEMS_PER_PAGE);
+
     }
 
     public function createOrder($request)
@@ -190,10 +201,10 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
         if (isset($startDate) && isset($endDate))
         {
-            $startDate = Carbon::createFromFormat("d/m/Y H:i:s", $startDate . " 00:00:00")
+            $startDate = Carbon::createFromFormat("Y-m-d H:i:s", $startDate . " 00:00:00")
                 ->toDateTimeString();
 
-            $endDate = Carbon::createFromFormat("d/m/Y H:i:s", $endDate . " 23:59:59")
+            $endDate = Carbon::createFromFormat("Y-m-d H:i:s", $endDate . " 23:59:59")
                 ->toDateTimeString();
             $this->model = $this->model->where("created_at", ">=", $startDate)
                                         ->where("created_at", "<=", $endDate);
@@ -201,7 +212,7 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
         if (isset($status))
         {
-            $this->model = $this->model->where($status, $status);
+            $this->model = $this->model->where('status', $status);
         }
 
 

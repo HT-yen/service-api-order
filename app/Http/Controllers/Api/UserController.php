@@ -31,7 +31,7 @@ class UserController extends ApiController
      */
     public function index(Request $request)
     {
-        return response()->json(['data' => $this->userRepository->getAllUsers($request->key),'success' => true], Response::HTTP_OK);
+        return response()->json(['data' => $this->userRepository->getAllUsers($request->key, $request->sort, $request->size),'success' => true], Response::HTTP_OK);
     }
 
     /**

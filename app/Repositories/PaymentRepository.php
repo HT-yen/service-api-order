@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Order;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Repositories\PaymentRepositoryInterface;
 
